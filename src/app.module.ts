@@ -1,23 +1,21 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
-import { User } from './users/user.entity';
+import { User } from './users/users.entity';
 import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT, 10),
+      port: parseInt(process.env.DB_PORT || '5432', 10),
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [User],
-      synchronize: true,
+      synchronize: true, // ⚠️ à désactiver en prod si tu veux éviter perte de données
       ssl: {
-        rejectUnauthorized: false,
+        rejectUnauthorized: false, // nécessaire avec Render Postgres
       },
     }),
     UsersModule,
