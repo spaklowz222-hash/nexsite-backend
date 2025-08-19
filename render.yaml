@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: nexsite-backend
+    env: node
+    plan: free
+    buildCommand: "npm install && npm run build"
+    startCommand: "npm run start:prod"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: nexsite-db
+          property: connectionString
+
+databases:
+  - name: nexsite-db
+    plan: free
